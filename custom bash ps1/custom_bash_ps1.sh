@@ -50,7 +50,7 @@ bg_color() {
 lastColorIndex=$((${#colors[@]} - 1))
 next_index() {
     if [[ $colorIndex -ge $lastColorIndex ]]; then
-        colorIndex=$((colorIndex % $lastColorIndex))        
+        colorIndex=$((colorIndex % $lastColorIndex))
     else
         ((colorIndex++))
     fi
@@ -72,8 +72,8 @@ pwd_divider_color() {
 
 shortenPwdOut=""
 shorten_pwd() {
-    local pwd="${PWD/#$HOME/\~}" 
-    local IFS=/ 
+    local pwd="${PWD/#$HOME/\~}"
+    local IFS=/
     local parts=($pwd)
     local arrayLen=${#parts[@]}
     shortenPwdOut=""
@@ -117,9 +117,14 @@ output_func() {
     shorten_pwd
     git_mod
 
+    local venv_prompt=""
+    if [ -n "${VIRTUAL_ENV_PROMPT:-}" ]; then
+        venv_prompt="$(fg_color $gitColor ${VIRTUAL_ENV_PROMPT})"
+    fi
+
 	local output="\\n${uhOut}${shortenPwdOut} ${gitModOut}\\n"
     ansi "0"
-    output+="$ansiCode $promptStart "
+    output+="${venv_prompt}$ansiCode $promptStart "
 	PS1=$output
 }
 
